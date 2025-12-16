@@ -234,33 +234,47 @@
   </div>
 
   <script>
-    // DEVICE TOGGLE FUNCTION
-    function toggle(device, state) {
-      const statusBox = document.getElementById("status");
-      statusBox.innerText = `${device} turned ${state}`;
-      statusBox.style.animation = "fadeIn 0.8s ease";
-    }
+  let kitchenInterval;
+  let alertTriggered = false;
 
-    // SIMULATED KITCHEN TEMPERATURE SENSOR
-    function getKitchenTemp() {
-      return Math.floor(Math.random() * (60 - 25 + 1)) + 25;
-    }
+  function getKitchenTemp() {
+    return Math.floor(Math.random() * (60 - 25 + 1)) + 25;
+  }
 
-    function monitorKitchen() {
-      const temp = getKitchenTemp();
-      const kitchenStatus = document.getElementById("kitchenStatus");
-      kitchenStatus.innerText = `Kitchen Temp: ${temp}°C`;
+  function monitorKitchen() {
+    const temp = getKitchenTemp();
+    const kitchenStatus = document.getElementById("kitchenStatus");
 
-      if (temp > 40) {
-        kitchenStatus.style.color = "red";
+    kitchenStatus.innerText = `Kitchen Temp: ${temp}°C`;
+
+    if (temp > 40) {
+      kitchenStatus.style.color = "red";
+
+      if (!alertTriggered) {
         alert("⚠ Warning: High temperature detected in Kitchen!");
-      } else {
-        kitchenStatus.style.color = "green";
+        alertTriggered = true;
       }
-    }
 
-    Uncomment below line to auto-check every 5 seconds
-    setInterval(monitorKitchen, 5000);
-  </script>
+      // High temperature → frequent monitoring
+      restartInterval(2000);
+
+    } else {
+      kitchenStatus.style.color = "green";
+      alertTriggered = false;
+
+      // Normal temperature → slow monitoring
+      restartInterval(8000);
+    }
+  }
+
+  function restartInterval(time) {
+    clearInterval(kitchenInterval);
+    kitchenInterval = setInterval(monitorKitchen, time);
+  }
+
+  // Start with optimized default
+  restartInterval(8000);
+</script>
+
 </body>
 </html>
