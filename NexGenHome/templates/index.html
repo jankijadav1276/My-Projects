@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexGenHome – Smart Automation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f7fa;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+      color: #fff;
+      flex-wrap: wrap;
+    }
+
+    .header .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffdd59;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .login-btn {
+      background-color: #ffdd59;
+      color: #333;
+    }
+
+    .login-btn:hover {
+      background-color: #ffd700;
+    }
+
+    /* Hero */
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      padding: 60px 50px;
+      background: #eaf0ff;
+    }
+
+    .hero-content {
+      flex: 1 1 500px;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      color: #2575fc;
+      margin-bottom: 20px;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #2575fc;
+    }
+
+    .primary-btn {
+      background-color: #2575fc;
+      color: #fff;
+    }
+
+    .primary-btn:hover {
+      background-color: #1a5ed0;
+    }
+
+
+    /* Features */
+    .features {
+      padding: 80px 50px;
+      text-align: center;
+    }
+
+    .features h2 {
+      font-size: 2.5rem;
+      margin-bottom: 50px;
+      color: #2575fc;
+    }
+
+    .feature-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      padding: 30px 20px;
+      border-radius: 15px;
+      width: 250px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+    }
+
+    .card h3 {
+      color: #2575fc;
+      margin-bottom: 15px;
+    }
+
+    .card p {
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2575fc;
+      color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+
+      .hero-content h1 {
+        font-size: 2.5rem;
+      }
+
+      .feature-cards {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card {
+        width: 80%;
+      }
+
+      .nav-links {
+        flex-direction: column;
+        margin: 15px 0;
+      }
+    }
+
+    .hero {
+  background-image: url("{{ url_for('static', filename='image/city1.jpg.jpeg') }}");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- ✅ HEADER -->
+  <header class="header">
+  <div class="logo">NexGenHome</div>
+
+  <nav class="nav-links">
+    <a href="{{ url_for('home') }}">Home</a>
+    <a href="{{ url_for('room') }}">Rooms</a>
+    <a href="{{ url_for('aboutUS') }}">About Us</a>
+    <a href="{{ url_for('contactUS') }}">Contact Us</a>
+  </nav>
+
+  <a href="{{ url_for('login') }}" class="btn login-btn">Login</a>
+
+</header>
+
+
+  <!-- ✅ HERO SECTION -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Welcome to NexGenHome</h1>
+      <p>Smart home automation and energy management system designed to optimize electricity usage, improve safety, and reduce carbon footprint.</p>
+      <a href="{{url_for('signup')}} "class="btn primary-btn">Get Started</a>
+    </div>
+    
+  </section>
+
+  <!-- ✅ FEATURES SECTION -->
+  <section class="features">
+    <h2>Key Features</h2>
+    <div class="feature-cards">
+      <div class="card">
+        <h3>Real-time Energy Monitoring</h3>
+        <p>Track electricity usage instantly to save energy and costs.</p>
+      </div>
+      <div class="card">
+        <h3>Smart Device Automation</h3>
+        <p>Automate lights, fans, and appliances seamlessly.</p>
+      </div>
+      <div class="card">
+        <h3>Gas & Temperature Alerts</h3>
+        <p>Receive instant notifications for gas leaks or temperature anomalies.</p>
+      </div>
+      <div class="card">
+        <h3>Carbon Footprint Analysis</h3>
+        <p>Monitor and reduce your home’s environmental impact.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 NexGenHome Automation. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>

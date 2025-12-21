@@ -1,144 +1,123 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_session import Session
 import os
 
-# ----- APP SETUP -----
-app = Flask(__name__)
+# ---------- APP SETUP ----------
+app = Flask(__name__, instance_relative_config=True)
+app.secret_key = "nexgenhome_secret_key"
 
-app.config['SECRET_KEY'] = 'nexgenhome_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# Ensure instance folder exists
+os.makedirs(app.instance_path, exist_ok=True)
+
+# ---------- DATABASE ----------
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(app.instance_path, 'users.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_TYPE'] = 'filesystem'
-
-# Initialize extensions
 db = SQLAlchemy(app)
-Session(app)
 
-# ----- USER MODEL -----
+# ---------- MODEL ----------
 class User(db.Model):
-    __tablename__ = 'user'  # ensures consistent table name across versions
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
 
-    def set_password(self, password):
-        """Hashes and stores the user password."""
-        self.password_hash = generate_password_hash(password)
+    @property
+    def password(self):
+        raise AttributeError("Password is write-only!")
 
-    def check_password(self, password):
-        """Verifies a user's password."""
-        return check_password_hash(self.password_hash, password)
+    @password.setter
+    def password(self, plain_password):
+        self.password_hash = generate_password_hash(plain_password)
 
+    def verify_password(self, plain_password):
+        return check_password_hash(self.password_hash, plain_password)
 
-# ----- DATABASE CREATION -----
+# Create tables if not exist
 with app.app_context():
     db.create_all()
 
-
-# ----- ROUTES -----
-
+# ---------- HOME ----------
 @app.route('/')
-def index():
-    """Redirect user to dashboard if logged in, else to login."""
-    if 'user_id' in session:
-        return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
-
+def home():
+    return render_template('index.html')
 
 # ---------- LOGIN ----------
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username_or_email = request.form.get('username', '').strip()
-        password = request.form.get('password', '').strip()
+        user_input = request.form['username']
+        password = request.form['password']  # Correct input name
 
-        if not username_or_email or not password:
-            flash("Please fill in all details.", "error")
-            return render_template("login.html")
-
-        # Try finding user by username or email
         user = User.query.filter(
-            (User.username == username_or_email) | (User.email == username_or_email)
+            (User.username == user_input) | (User.email == user_input)
         ).first()
 
-        if user and user.check_password(password):
+        if user and user.verify_password(password):
             session['user_id'] = user.id
             session['username'] = user.username
-            flash("Login successful!", "success")
-            return redirect(url_for('dashboard'))
-        else:
-            flash("Invalid username/email or password.", "error")
-            return render_template("login.html")
+            return redirect(url_for('room'))
 
-    return render_template("login.html")
-
+        flash("Invalid login details")
+    return render_template('login.html')
 
 # ---------- SIGNUP ----------
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password', '').strip()
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
 
-        if not username or not email or not password:
-            flash("All fields are required.", "error")
-            return render_template("signup.html")
-
-        # Check duplicates
+        # Check if username or email exists
         if User.query.filter_by(username=username).first():
-            flash("Username already exists.", "error")
-            return render_template("signup.html")
-        if User.query.filter_by(email=email).first():
-            flash("Email already registered.", "error")
-            return render_template("signup.html")
+            flash("Username already exists")
+            return render_template('signup.html')
 
-        # Create new user
-        new_user = User(username=username, email=email)
-        new_user.set_password(password)
-        db.session.add(new_user)
+        if User.query.filter_by(email=email).first():
+            flash("Email already exists")
+            return render_template('signup.html')
+
+        # Create user object
+        user = User(username=username, email=email)
+        user.password = password  # Hash and store
+
+        # Add to DB
+        db.session.add(user)
         db.session.commit()
 
-        # Auto-login after signup
-        session['user_id'] = new_user.id
-        session['username'] = new_user.username
-        flash("Signup successful! Welcome to NexGenHome.", "success")
-        return redirect(url_for('dashboard'))
+        # Set session
+        session['user_id'] = user.id
+        session['username'] = user.username
+        return redirect(url_for('room'))
 
-    return render_template("signup.html")
+    return render_template('signup.html')
 
-
-# ---------- DASHBOARD ----------
-@app.route('/dashboard')
-def dashboard():
+# ---------- ROOM ----------
+@app.route('/room')
+def room():
     if 'user_id' not in session:
-        flash("Please log in first.", "error")
+        flash("Please login to access rooms.")
         return redirect(url_for('login'))
+    return render_template('Room.html')
 
-    username = session.get('username')
-    latest_user = User.query.order_by(User.id.desc()).first()
+# ---------- ABOUT ----------
+@app.route('/aboutUS')
+def aboutUS():
+    return render_template('aboutUS.html')
 
-    return render_template("dashboard.html", user=username, latest_user=latest_user)
-
+# ---------- CONTACT ----------
+@app.route('/contactUS')
+def contactUS():
+    return render_template('contactUS.html')
 
 # ---------- LOGOUT ----------
 @app.route('/logout')
 def logout():
     session.clear()
-    flash("You have been logged out.", "success")
-    return redirect(url_for('login'))
+    flash("You have been logged out.")
+    return redirect(url_for('home'))
 
-
-# ----- MAIN -----
+# ---------- RUN ----------
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
-
-import os
-
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-db_path = os.path.join(BASE_DIR, "users.db")
-
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///C:/Users/patel sakshi dilipbh/Downloads/mini project/New folder"
+    app.run(debug=True)

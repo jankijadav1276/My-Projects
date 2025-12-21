@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us – NexGenHome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f7fa;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+      color: #fff;
+      flex-wrap: wrap;
+    }
+
+    header span {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffdd59;
+    }
+
+    header button {
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      background-color: #ffdd59;
+      color: #333;
+      transition: background-color 0.3s;
+    }
+
+    header button:hover {
+      background-color: #ffd700;
+    }
+
+    /* About Container */
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .container h2 {
+      font-size: 2.5rem;
+      color: #2575fc;
+      margin-bottom: 20px;
+    }
+
+    .container p {
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2575fc;
+      color: #fff;
+      margin-top: 50px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+
+      .nav-links {
+        flex-direction: column;
+      }
+
+      .container {
+        width: 90%;
+        padding: 20px;
+      }
+
+      .container h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <span>NexGenHome – Smart Automation</span>
+
+    <nav class="nav-links">
+      <!-- ✅ FIXED ROUTES -->
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('room') }}">Rooms</a>
+      <a href="{{ url_for('aboutUS') }}">About Us</a>
+      <a href="{{ url_for('contactUS') }}">Contact Us</a>
+    </nav>
+
+    <!-- ✅ FIXED LOGIN ROUTE -->
+    <a href="{{ url_for('login') }}">
+      <button>Login</button>
+    </a>
+  </header>
+
+  <!-- About Section -->
+  <div class="container">
+    <h2>About NexGenHome</h2>
+    <p>
+      Welcome to our project <strong>NexGenHome</strong>.<br><br>
+      NexGenHome is a smart home automation project focused on energy efficiency,
+      safety, and sustainability.<br><br>
+      Our system helps users monitor energy consumption, automate devices,
+      and reduce their carbon footprint.
+    </p>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 NexGenHome Automation. All Rights Reserved.
+  </footer>
+</body>
+
+</html>

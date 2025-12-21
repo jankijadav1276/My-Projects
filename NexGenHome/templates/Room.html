@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NexGenHome – Rooms</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+
+  body {
+    min-height: 100vh;
+    background-color:#fff ;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    position: relative;
+    color: #fff;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 0;
+  } 
+
+  nav {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 15px 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 2;
+  }
+  nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+  nav a:hover { color: #ffd700; }
+  nav button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(90deg,#6a11cb,#2575fc);
+    cursor: pointer;
+    color: #fff;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+  nav button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+  header {
+    position: fixed;
+    top: 60px; left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    align-items: center;
+    z-index: 2;
+  }
+  header span { font-size: 1.5rem; font-weight: 700; text-shadow: 1px 1px 5px rgba(0,0,0,0.5); }
+  header button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(90deg,#6a11cb,#2575fc);
+    cursor: pointer;
+    color: #fff;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+  header button:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+ .container { 
+  position: relative;
+  z-index: 1; 
+  margin-top: 130px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+
+  width: 100%;
+  max-width: 1100px;
+}
+
+  .room-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    position: relative;
+    overflow: hidden;
+    min-height: 260px;
+   display: flex;
+   justify-content: space-between;
+   transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .room-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+ }
+
+
+  /* Room-specific backgrounds */
+ .living-room { 
+   background-image: url("{{ url_for('static', filename='images/livingroom.png') }}") no-repeat center center/cover; 
+}
+.bedroom { 
+   background-image: url("{{ url_for('static', filename='images/bedroom.png') }}") no-repeat center center/cover; 
+}
+.kitchen { 
+   background-image: url("{{ url_for('static', filename='images/kitchen.png') }}") no-repeat center center/cover; 
+}
+
+  /* Dark overlay inside each card for readability */
+  .room-card::before {
+    content: '';
+    position: absolute; top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.4);
+    border-radius: 20px;
+    z-index: 0;
+  }
+
+  .room-card h3, .room-card .control-btn, .room-card .status-box, .room-card .kitchen-alert {
+    position: relative; z-index: 1;
+  }
+
+  .control-btn {
+    padding: 12px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(90deg,#6a11cb,#2575fc);
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .control-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+
+  .status-box, .kitchen-alert {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-weight: 500;
+  }
+
+ .status-box {
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-weight: 500;
+    width: 500px;
+    min-height: 60px;
+    font-size: 16px;
+}
+
+  #kitchenAlert { color: green; }
+  #gasStatus { color: #4ef08a; }
+
+  @media(max-width:768px){
+    .container { margin-top: 180px; }
+    header { flex-direction: column; gap: 10px; padding: 10px 20px; }
+  }
+
+</style>
+</head>
+
+
+<body>
+   
+ <audio id="warningSound" preload="auto">
+  <source src="{{ url_for('static', filename='sound/warningSound.mp3') }}" type="audio/mpeg">
+</audio>
+
+<audio id="criticalSound" preload="auto">
+  <source src="{{ url_for('static', filename='sound/criticalSound.mp3') }}" type="audio/mpeg">
+</audio>
+
+  <nav class="room-nav">
+  <a href="{{ url_for('home') }}">Home</a>
+  <a href="{{ url_for('room') }}">Rooms</a>
+  <a href="{{ url_for('aboutUS') }}">About Us</a>
+  <a href="{{ url_for('contactUS') }}">Contact Us</a>
+  <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+</nav>
+
+
+  <header>
+    <span>NexGenHome – Rooms Control</span>
+    <a href="Room.html"><button>Dashboard</button></a>
+  </header>
+
+  <div class="container">
+
+    <!-- Living Room -->
+    <div class="room-card living-room">
+      <h3>Living Room</h3>
+      <div>
+        <button class="control-btn" onclick="toggle('Living Room Light','ON')">Light ON</button>
+        <button class="control-btn" onclick="toggle('Living Room Light','OFF')">Light OFF</button>
+        <button class="control-btn" onclick="toggle('Living Room Fan','ON')">Fan ON</button>
+        <button class="control-btn" onclick="toggle('Living Room Fan','OFF')">Fan OFF</button>
+      </div>
+    </div>
+
+    <!-- Bedroom -->
+    <div class="room-card bedroom">
+      <h3>Bedroom</h3>
+      <div>
+        <button class="control-btn" onclick="toggle('Bedroom Light','ON')">Light ON</button>
+        <button class="control-btn" onclick="toggle('Bedroom Light','OFF')">Light OFF</button>
+        <button class="control-btn" onclick="toggle('Bedroom Fan','ON')">Fan ON</button>
+        <button class="control-btn" onclick="toggle('Bedroom Fan','OFF')">Fan OFF</button>
+      </div>
+    </div>
+
+    <!-- Kitchen -->
+    <!-- Inside your Kitchen room-card -->
+<div class="room-card kitchen">
+  <h3>Kitchen</h3>
+  <div>
+    <button class="control-btn" onclick="toggle('Kitchen Light','ON')">Light ON</button>
+    <button class="control-btn" onclick="toggle('Kitchen Light','OFF')">Light OFF</button>
+    <button class="control-btn" onclick="toggle('Kitchen Fan','ON')">Fan ON</button>
+    <button class="control-btn" onclick="toggle('Kitchen Fan','OFF')">Fan OFF</button>
+  </div>
+
+  <div class="status-box" id="kitchenStatus">Kitchen Temp: --</div>
+  <div class="kitchen-alert" id="kitchenAlert">Status: Normal</div>
+  <div class="kitchen-alert" id="gasStatus">Gas Supply: ON</div>
+
+  <!-- Audio Control -->
+  <button class="control-btn" onclick="enableSound()">Enable Alarm</button>
+
+  <!-- Manual Gas Restore -->
+  <button class="control-btn" onclick="restoreGas()">Restore Gas</button>
+</div>
+    
+    <!-- Energy & Carbon Monitoring Card -->
+<div class="room-card" style="background: rgba(255,255,255,0.15);">
+  <h3>Energy & Carbon Monitor</h3>
+  <div class="status-box" id="energyUsage">Energy Usage: -- kWh</div>
+  <div class="status-box" id="carbonEmission">Carbon Emission: -- kg CO₂</div>
+</div>
+
+
+    <!-- Alarm Controls -->
+    
+      <div class="status-box" id="status">Status: No action performed yet.</div>
+    
+
+  </div>
+
+
+<script>
+  let audioUnlocked = false;
+let warningPlaying = false;
+let criticalPlaying = false;
+
+const warningSound = document.getElementById("warningSound");
+const criticalSound = document.getElementById("criticalSound");
+
+/* ===== FAN/LIGHT Toggle ===== */
+function toggle(device, state) {
+  // Unlock audio on first user interaction
+  if (!audioUnlocked) {
+    warningSound.play().then(() => {
+      warningSound.pause();
+      warningSound.currentTime = 0;
+      audioUnlocked = true;
+    }).catch(() => {});
+  }
+
+  document.getElementById("status").innerText =
+    `Status: ${device} turned ${state}`;
+}
+
+/* ===== ENABLE AUDIO ===== */
+function enableSound() {
+  warningSound.play().then(() => {
+    warningSound.pause();
+    warningSound.currentTime = 0;
+    criticalSound.pause();
+    criticalSound.currentTime = 0;
+    audioUnlocked = true;
+    alert("🔔 Alarm Enabled");
+  }).catch(()=>{});
+}
+
+/* ===== MANUAL GAS RESTORE ===== */
+function restoreGas() {
+  const gasBox = document.getElementById("gasStatus");
+  
+  // Ask for user permission
+  const restore = confirm("⚠ Do you want to restore the gas supply?");
+  if (restore) {
+    gasBox.innerText = "Gas Supply: ON";
+    gasBox.style.color = "#4ef08a"; // green
+    alert("✅ Gas supply restored!");
+  } else {
+    alert("❌ Gas supply remains OFF.");
+  }
+}
+
+
+/* ===== TEMP SENSOR ===== */
+function getKitchenTemp() {
+  return Math.floor(Math.random() * (70 - 25 + 1)) + 25;
+}
+
+/* ===== MONITOR KITCHEN ===== */
+function monitorKitchen() {
+  const temp = getKitchenTemp();
+
+  const kitchenAlert = document.getElementById("kitchenAlert");
+  const gasBox = document.getElementById("gasStatus");
+
+  document.getElementById("kitchenStatus").innerText = `Kitchen Temp: ${temp}°C`;
+
+  /* 🟢 NORMAL */
+  if (temp <= 40) {
+    kitchenAlert.innerText = "Status: Normal";
+    kitchenAlert.style.color = "green";
+
+    warningSound.pause();
+    warningSound.currentTime = 0;
+    criticalSound.pause();
+    criticalSound.currentTime = 0;
+    warningPlaying = false;
+    criticalPlaying = false;
+  }
+
+  /* 🟠 HIGH TEMP */
+  else if (temp <= 60) {
+    kitchenAlert.innerText = "⚠ High Temperature";
+    kitchenAlert.style.color = "orange";
+
+    if (audioUnlocked && !warningPlaying) {
+      warningSound.loop = true;
+      warningSound.play().catch(()=>{});
+      warningPlaying = true;
+    }
+
+    criticalSound.pause();
+    criticalSound.currentTime = 0;
+    criticalPlaying = false;
+  }
+
+  /* 🔴 CRITICAL */
+  else {
+    kitchenAlert.innerText = "🚨 CRITICAL: Gas Risk";
+    kitchenAlert.style.color = "red";
+
+    if (audioUnlocked && !criticalPlaying) {
+      criticalSound.loop = true;
+      criticalSound.play().catch(()=>{});
+      criticalPlaying = true;
+    }
+
+    warningSound.pause();
+    warningSound.currentTime = 0;
+    warningPlaying = false;
+
+    // Turn off gas supply
+    gasBox.innerText = "Gas Supply: OFF";
+    gasBox.style.color = "red";
+  }
+}
+
+/* ===== AUTO MONITOR EVERY 5 SECONDS ===== */
+setInterval(monitorKitchen, 5000);
+
+/* ===== SIMULATE ENERGY & CARBON USAGE ===== */
+function getEnergyUsage() {
+  // Random energy usage between 0.5 and 5 kWh for demo
+  return (Math.random() * (5 - 0.5) + 0.5).toFixed(2);
+}
+
+function getCarbonEmission() {
+  // Random carbon emission between 0.2 and 2 kg CO₂
+  return (Math.random() * (2 - 0.2) + 0.2).toFixed(2);
+}
+
+/* ===== UPDATE MONITOR EVERY 5 SECONDS ===== */
+function monitorEnergyAndCarbon() {
+  const energyBox = document.getElementById("energyUsage");
+  const carbonBox = document.getElementById("carbonEmission");
+
+  energyBox.innerText = `Energy Usage: ${getEnergyUsage()} kWh`;
+  carbonBox.innerText = `Carbon Emission: ${getCarbonEmission()} kg CO₂`;
+}
+
+// Auto update
+setInterval(monitorEnergyAndCarbon, 5000);
+
+</script>
+
+</body>
+</html>

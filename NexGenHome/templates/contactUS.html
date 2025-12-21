@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us – NexGenHome</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f5f7fa;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+      color: #fff;
+      flex-wrap: wrap;
+    }
+
+    header span {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #ffdd59;
+    }
+
+    header button {
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      background-color: #ffdd59;
+      color: #333;
+      transition: background-color 0.3s;
+    }
+
+    header button:hover {
+      background-color: #ffd700;
+    }
+
+    /* Contact Container */
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .container h2 {
+      font-size: 2.5rem;
+      color: #2575fc;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .container p {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    /* Contact Form */
+    .contact-form {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+      resize: none;
+      transition: border-color 0.3s;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: #2575fc;
+      outline: none;
+    }
+
+    .contact-form button {
+      width: 150px;
+      align-self: center;
+      padding: 12px 25px;
+      background-color: #2575fc;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .contact-form button:hover {
+      background-color: #1a5ed0;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #2575fc;
+      color: #fff;
+      margin-top: 50px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+
+      .nav-links {
+        flex-direction: column;
+      }
+
+      .container {
+        width: 90%;
+        padding: 20px;
+      }
+
+      .container h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <span>NexGenHome – Smart Automation</span>
+
+    <nav class="nav-links">
+       <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('room') }}">Rooms</a>
+      <a href="{{ url_for('aboutUS') }}">About Us</a>
+      <a href="{{ url_for('contactUS') }}">Contact Us</a>
+    </nav>
+
+    <a href="login.html">
+      <button>Login</button>
+    </a>
+  </header>
+
+  <!-- Contact Section -->
+  <div class="container">
+    <h2>Contact Us</h2>
+    <p>Hello! This is the contact information of our team. You can reach out in case of any queries or inquiries. Thank you!</p>
+    <p><strong>Email:</strong> nexgenhome@support.com</p>
+    <p><strong>Phone:</strong> +91-8965783456</p>
+
+    <!-- Contact Form -->
+    <form class="contact-form">
+      <input type="text" placeholder="Your Name" required>
+      <input type="email" placeholder="Your Email" required>
+      <textarea rows="5" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 NexGenHome Automation. All Rights Reserved.
+  </footer>
+</body>
+</html>
