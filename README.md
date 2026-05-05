@@ -1,4 +1,4 @@
-## 🚀 Projects
+## Projects
 
 1) NEXGENHOME – SMART HOME AUTOMATION DASHBOARD (UI PROTOTYPE)
     https://nexzenhome-website.onrender.com/
